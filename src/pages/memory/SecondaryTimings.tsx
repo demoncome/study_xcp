@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Layers, Thermometer, Clock, Info } from 'lucide-react';
+import { Layers, Thermometer, Clock, Info, Calculator } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const SecondaryTimings = () => {
+  const [frequency, setFrequency] = useState<string>('8800');
+  const [selectedGranule, setSelectedGranule] = useState<string>('hynix-3gm');
+
+  const granuleConstants: Record<string, { name: string; constant: number }> = {
+    'hynix-2ga': { name: '海力士 2GA', constant: 120 },
+    'hynix-3gm': { name: '海力士 3GM', constant: 160 },
+    'hynix-cjr': { name: '海力士 CJR', constant: 260 },
+    'hynix-c9blj': { name: '海力士 C9BLJ', constant: 280 },
+    'micron-c9blj': { name: '美光 C9BLJ', constant: 280 },
+  };
+
+  const calculateTRFC = () => {
+    const freqValue = parseFloat(frequency) || 0;
+    const constant = granuleConstants[selectedGranule]?.constant || 1;
+    if (freqValue > 0) {
+      return Math.round(freqValue * constant / 2000);
+    }
+    return 0;
+  };
+
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="space-y-4">
@@ -64,6 +86,48 @@ const SecondaryTimings = () => {
               <div className="p-2 border border-border bg-secondary/50">
                 <p className="text-[10px] text-muted-foreground uppercase">海力士 CJR</p>
                 <p className="font-mono font-bold">260ns</p>
+              </div>
+            </div>
+            <div className="p-3 bg-primary/5 border border-primary/20 font-mono text-[10px]">
+              tRFC 计算公式: 目标频率 × 颗粒常数 / 2000
+            </div>
+            <div className="p-4 bg-secondary/50 border border-border space-y-3">
+              <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground mb-3">
+                <Calculator className="h-3 w-3" />
+                <span>tRFC 计算器</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-mono text-muted-foreground mb-1 block">目标频率 (MT/s)</label>
+                  <Input
+                    type="number"
+                    value={frequency}
+                    onChange={(e) => setFrequency(e.target.value)}
+                    className="h-8 text-sm font-mono"
+                    placeholder="输入频率"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono text-muted-foreground mb-1 block">颗粒类型</label>
+                  <Select value={selectedGranule} onValueChange={setSelectedGranule}>
+                    <SelectTrigger className="h-8 text-sm font-mono">
+                      <SelectValue placeholder="选择颗粒" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hynix-2ga">海力士 2GA (120ns)</SelectItem>
+                      <SelectItem value="hynix-3gm">海力士 3GM (160ns)</SelectItem>
+                      <SelectItem value="hynix-cjr">海力士 CJR (260ns)</SelectItem>
+                      <SelectItem value="hynix-c9blj">海力士 C9BLJ (280ns)</SelectItem>
+                      <SelectItem value="micron-c9blj">美光 C9BLJ (280ns)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="p-2 bg-primary/10 border border-primary/20 font-mono text-xs">
+                tRFC 推荐值: <span className="text-primary font-bold">{calculateTRFC()}</span>
+              </div>
+              <div className="text-[10px] text-muted-foreground italic">
+                计算依据: {frequency} × {granuleConstants[selectedGranule]?.constant} / 2000 = {calculateTRFC()}
               </div>
             </div>
           </CardContent>

@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Thermometer, Zap, Info } from 'lucide-react';
+import { Thermometer, Zap, Info, Calculator } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 const MainTimings = () => {
+  const [tCL, setTCL] = useState<string>('34');
+  const [frequency, setFrequency] = useState<string>('7200');
+
+  const calculateLatency = () => {
+    const tCLValue = parseFloat(tCL) || 0;
+    const freqValue = parseFloat(frequency) || 1;
+    if (tCLValue > 0 && freqValue > 0) {
+      return (tCLValue * 2000 / freqValue).toFixed(2);
+    }
+    return '0.00';
+  };
+
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="space-y-4">
@@ -23,6 +36,37 @@ const MainTimings = () => {
             <p className="text-muted-foreground">与整个信号传输体系（CPU PHY、主板、内存体质）强相关。也是唯一一个能通过增加内存电压而压低的时序。</p>
             <div className="p-3 bg-primary/5 border border-primary/20 font-mono text-[10px]">
               tCL 延迟计算: tCL * 2000 / 频率 (ns)
+            </div>
+            <div className="p-4 bg-secondary/50 border border-border space-y-3">
+              <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground mb-3">
+                <Calculator className="h-3 w-3" />
+                <span>延迟计算器</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-mono text-muted-foreground mb-1 block">tCL 值</label>
+                  <Input
+                    type="number"
+                    value={tCL}
+                    onChange={(e) => setTCL(e.target.value)}
+                    className="h-8 text-sm font-mono"
+                    placeholder="输入 tCL"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono text-muted-foreground mb-1 block">频率 (MT/s)</label>
+                  <Input
+                    type="number"
+                    value={frequency}
+                    onChange={(e) => setFrequency(e.target.value)}
+                    className="h-8 text-sm font-mono"
+                    placeholder="输入频率"
+                  />
+                </div>
+              </div>
+              <div className="p-2 bg-primary/10 border border-primary/20 font-mono text-xs">
+                计算结果: <span className="text-primary font-bold">{calculateLatency()} ns</span>
+              </div>
             </div>
             <ul className="list-disc list-inside text-xs space-y-1 text-muted-foreground">
               <li>信号越好，相同电压下 tCL 越低</li>
