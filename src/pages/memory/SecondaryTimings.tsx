@@ -11,6 +11,7 @@ const SecondaryTimings = () => {
   const [selectedGranule, setSelectedGranule] = useState<string>('hynix-3gm');
 
   const granuleConstants: Record<string, { name: string; constant: number }> = {
+    'hynix-2gm': { name: '海力士 2GM', constant: 100 },
     'hynix-2ga': { name: '海力士 2GA', constant: 120 },
     'hynix-3gm': { name: '海力士 3GM', constant: 160 },
     'hynix-cjr': { name: '海力士 CJR', constant: 260 },
@@ -114,6 +115,7 @@ const SecondaryTimings = () => {
                       <SelectValue placeholder="选择颗粒" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="hynix-2gm">海力士 2GM (100ns)</SelectItem>
                       <SelectItem value="hynix-2ga">海力士 2GA (120ns)</SelectItem>
                       <SelectItem value="hynix-3gm">海力士 3GM (160ns)</SelectItem>
                       <SelectItem value="hynix-cjr">海力士 CJR (260ns)</SelectItem>
