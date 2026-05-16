@@ -53,10 +53,10 @@ const App = () => {
           <footer className="px-6 py-8 border-t border-border mt-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">
-                XCP INTERNAL TRAINING MATERIAL // NO UNAUTHORIZED DISTRIBUTION
+                版权所有@星超频 内容提供 阿泽
               </span>
               <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">
-                &copy; 2026 XCP TECH LABS
+                &copy; 2026 星超频
               </span>
             </div>
           </footer>
